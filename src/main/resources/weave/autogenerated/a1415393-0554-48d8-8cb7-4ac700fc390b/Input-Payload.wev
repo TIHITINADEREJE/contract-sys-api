@@ -1,0 +1,4 @@
+%dw 2.0
+
+type auto_a1415393_0554_48d8_8cb7_4ac700fc390b_Input_Payload = Array<{  Status: String,   "Account Name": String,   "Customer Signed Date"?: String,   "Contract End Date"?: String,   "Contract Term (months)": Number,   "Contract Start Date": String,   _?: Any}>
+

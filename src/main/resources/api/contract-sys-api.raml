@@ -1,0 +1,129 @@
+#%RAML 1.0
+title: contract-sys-api
+
+  
+/contract:
+  get:
+    queryParameters:
+      Id:
+        type: string
+        required : true
+    responses:
+      200:
+        body:
+          application/json:
+            examples: 
+              values:             
+                [
+                  {
+                      "LastModifiedDate": "2024-09-21T08:45:24.000Z",
+                      "ContractNumber": "00000100",
+                      "AccountId": "001d2000007ZbXcAAK",
+                      "ContractTerm": "14",
+                      "CustomerSignedDate": null,
+                      "StatusCode": "Draft",
+                      "StartDate": "2024-09-25",
+                      "EndDate": "2025-11-24",
+                      "Status": "Draft",
+                      "CreatedDate": "2024-09-21T08:45:24.000Z",
+                      "Id": "800d2000005Rts2AAC"
+                  }
+                ]
+      400:
+        body:
+          application/json:
+            examples:
+              values:
+                message : "Bad request"
+      401:
+        body:
+          application/json:
+            examples:
+              values:
+                message : "Unauthorized" 
+      404:
+        body:
+          application/json:
+            examples:
+              values:
+                message : "Not Found"     
+      500:
+        body:
+          application/json:
+            examples:
+              values:
+                message : "Internal Sevor Error"  
+  post:
+    headers:
+      client_id:
+        type: string
+      client_secret:
+        type: string
+    body:
+      application/json:
+        type: array
+        items:
+          type: object
+          properties:
+            Account Name:
+              type: string
+              required : true
+            Contract Term (months):
+              type: number
+              required : true
+            Contract Start Date:
+              type: date-only
+              required : true
+            Status:
+              type: string
+              required : true
+            Customer Signed Date:
+              type: date-only
+              required : false
+            Contract End Date:
+              type: date-only
+              required : false
+        examples: 
+          values:               
+            [
+                {
+                    "Account Name": "Advanced TSP",
+                    "Contract Term (months)": 14,
+                    "Customer Signed Date": 2024-09-25,
+                    "StatusCode": "Draft",
+                    "Contract Start Date": 2024-09-25,
+                    "Status": "Draft"
+                }
+            ]
+    responses:
+      201:
+        body:
+          application/json:
+            examples:
+              values:
+                message : "Contract created successfully"
+                Id :  "800d2000005Rts2AAC"
+      400:
+        body:
+          application/json:
+            examples:
+              values:
+                message : "Bad request"
+      401:
+        body:
+          application/json:
+            examples:
+              values:
+                message : "Unauthorized" 
+      404:
+        body:
+          application/json:
+            examples:
+              values:
+                message : "Not Found"     
+      500:
+        body:
+          application/json:
+            examples:
+              values:
+                message : "Internal Sevor Error"            

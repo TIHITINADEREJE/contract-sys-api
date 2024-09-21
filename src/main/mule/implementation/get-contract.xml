@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core" xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd">
+	<flow name="get-contractFlow" doc:id="25bd9267-55c2-46f7-93ed-7496f9339432" >
+		<logger level="INFO" doc:name="Before salesforce" doc:id="9fc9f846-9b9a-4bce-9119-12c8db3891ca" message="Before salesforce" />
+		<salesforce:query doc:id="560344cf-a66d-484b-9603-818cb6ef70a4" config-ref="contract_salesforce_Config" doc:name="Query Contract" >
+			<salesforce:salesforce-query ><![CDATA[SELECT :field FROM Contract where Id = :Id]]></salesforce:salesforce-query>
+			<salesforce:parameters ><![CDATA[#[%dw 2.0
+output application/json
+---
+{
+	Id : vars.Id,
+	field : vars.field
+}]]]></salesforce:parameters>
+		</salesforce:query>
+		<logger level="INFO" doc:name="After salesforce" doc:id="16a6b77c-782c-48a0-9fd7-3c657651a3c0" message="After salesforce" />
+		<choice doc:name="Choice" doc:id="e0b71767-7933-477b-b496-9ca1782c5f3c" >
+			<when expression="#[sizeOf(payload) != 0]" >
+				<ee:transform doc:name="response" doc:id="cd273fe3-a56e-4bed-9238-e6f68a549eda" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+payload]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</when>
+			<otherwise >
+				<ee:transform doc:name="Transform Message" doc:id="6d5ab7ea-ebbd-499d-a194-551cd2a62f1f" >
+					<ee:message >
+						<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+---
+"No record found in Salesforce"]]></ee:set-payload>
+					</ee:message>
+				</ee:transform>
+			</otherwise>
+		</choice>
+	</flow>
+</mule>

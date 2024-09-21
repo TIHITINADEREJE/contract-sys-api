@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<mule xmlns:salesforce="http://www.mulesoft.org/schema/mule/salesforce" xmlns:ee="http://www.mulesoft.org/schema/mule/ee/core"
+	xmlns="http://www.mulesoft.org/schema/mule/core"
+	xmlns:doc="http://www.mulesoft.org/schema/mule/documentation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.mulesoft.org/schema/mule/core http://www.mulesoft.org/schema/mule/core/current/mule.xsd
+http://www.mulesoft.org/schema/mule/ee/core http://www.mulesoft.org/schema/mule/ee/core/current/mule-ee.xsd
+http://www.mulesoft.org/schema/mule/salesforce http://www.mulesoft.org/schema/mule/salesforce/current/mule-salesforce.xsd">
+	<flow name="post-contractFlow" doc:id="a1415393-0554-48d8-8cb7-4ac700fc390b" >
+		<logger level="INFO" doc:name="Before salesforce" doc:id="84cd77db-a3ae-4d84-8ff6-d64f4e78d74b" message="Before salesforce" />
+		<ee:transform doc:name="Transform Message" doc:id="023ed5b5-1a1e-43c6-b704-32b27375187e" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/java
+---
+payload map (data, index) ->
+{
+    "AccountId": data."Account Name",
+    "ContractTerm": data."Contract Term (months)",
+    "CustomerSignedDate": data."Customer Signed Date" as Date {format : "yyyy-MM-dd"},
+    "StartDate": data."Contract Start Date" as Date {format : "yyyy-MM-dd"},
+    "Status": data.Status,
+    "Id" : data.Id
+}]]></ee:set-payload>
+			</ee:message>
+		</ee:transform>
+		<salesforce:upsert objectType="Contract" externalIdFieldName="Id" doc:id="e8ce9c75-01d0-4c2d-91f1-fff0bb99df6e" config-ref="contract_salesforce_Config" doc:name="Upsert" />
+		<logger level="INFO" doc:name="After salesforce" doc:id="bf9641df-8d09-4a96-bbd5-cf37246b86a0" message="After salesforce" />
+		<ee:transform doc:name="Transform Message" doc:id="00d40f42-e3a9-4e03-8fbf-be9df9e536da" >
+			<ee:message >
+				<ee:set-payload ><![CDATA[%dw 2.0
+output application/json
+var response = payload.items[0]
+---
+[
+    {
+        "created": response.payload.created,
+        "success": response.payload.success,
+        "Id": response.payload.id,
+        "errors": response.statusCode
+    }
+]]]></ee:set-payload>
+			</ee:message>
+			<ee:variables />
+		</ee:transform>
+	</flow>
+</mule>
