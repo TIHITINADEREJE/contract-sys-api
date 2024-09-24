@@ -31,7 +31,7 @@
 		<ee:transform doc:name="Transform Message" doc:id="81b99e5c-dfd4-4f0f-9a42-db412139043d" >
 			<ee:message />
 			<ee:variables >
-				<ee:set-variable variableName="field" ><![CDATA[p('field.contact')]]></ee:set-variable>
+				<ee:set-variable variableName="field" ><![CDATA[p('field.contract')]]></ee:set-variable>
 				<ee:set-variable variableName="Id" ><![CDATA[attributes.queryParams.Id]]></ee:set-variable>
 			</ee:variables>
 		</ee:transform>

@@ -11,4 +11,4 @@ sf:
   authorizationURL : "https://login.salesforce.com/services/Soap/u/60.0"
   
 field:
-  contact: "LastModifiedDate, ContractNumber, AccountId,ContractTerm, CustomerSignedDate, StatusCode, StartDate,EndDate, Status, CreatedDate,Id "
+  contract: "LastModifiedDate, ContractNumber, AccountId,ContractTerm, CustomerSignedDate, StatusCode, StartDate,EndDate, Status, CreatedDate,Id "
